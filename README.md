@@ -32,6 +32,11 @@ Then open the frontend page, works even if opened as it is or hosted in a www/ht
 file:///home/goliath/projects/vehiclefinder/src/frontend/index.html
 ```
 
+API can be inspected with the inline documentation by visiting it via browser:
+```
+http://localhost:8000
+```
+
 ## Deployment
 
 To use a WSGI-compatible server, we can use uWSGI
