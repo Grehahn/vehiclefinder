@@ -13,9 +13,23 @@
     <section class="section">
         <div class="container">
             <div id="app">
-                <figure class="image is-3by2">
-                  <img :src="image_url" />
-                </figure>
+                <div class="container is-fluid">
+                    <h1 class="title">{{title}}</h1>
+                    <h2 class="subtitle">Your nifty car lookup tool</h2>
+                    <figure class="image is-3by2">
+                      <img :src="image_url" />
+                    </figure>
+                    <div class="field">
+                      <label class="label">Vehicle ID</label>
+                      <div class="control">
+                        <input class="input" type="text" placeholder="12345" v-model="vehicle.id">
+                      </div>
+                    </div>
+                    <div class="buttons">
+                        <button class="button" @click="getVehicleInfo">Get Vehicle Info</button>
+                    </div>
+                </div>
+
             </div>
         </div>
     </section>
@@ -25,18 +39,40 @@
             el: "#app",
             data: {
                 title: "Vehicle Finder",
-                image_url: ""
+                vehicle: {
+                    id: "",
+                    make: "",
+                    model_short: "",
+                    model_long: "",
+                    trim: "",
+                    derivative: "",
+                    year_intro: "",
+                    year_end: ""
+                },
+                image_url: "./assets/480x320.png"
             },
-            mounted() {
-                axios({
-                    method: 'get',
-                    url: 'https://izrite.com:5555/image/71890',
-                    responseType: 'json'
-                }).then(result=> {
-                    console.log(result.data.url)
-                    this.image_url = result.data.url
-                })
+            // mounted() {
+            //     axios({
+            //         method: 'get',
+            //         url: 'https://izrite.com:5555/image/71890',
+            //         responseType: 'json'
+            //     }).then(result=> {
+            //         console.log(result.data.url)
+            //         this.image_url = result.data.url
+            //     })
                 
+            // },
+            methods: {
+                getVehicleInfo() {
+                    axios({
+                        method: 'get',
+                        url: 'https://izrite.com:5555/image/' + this.vehicle.id,
+                        responseType: 'json'
+                    }).then(result=> {
+                        console.log(result.data.url)
+                        this.image_url = result.data.url
+                    })
+                }
             }
         })
 
