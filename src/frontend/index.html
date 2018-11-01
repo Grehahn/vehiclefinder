@@ -19,15 +19,70 @@
                     <figure class="image is-3by2">
                       <img :src="image_url" />
                     </figure>
-                    <div class="field">
-                      <label class="label">Vehicle ID</label>
-                      <div class="control">
-                        <input class="input" type="text" placeholder="12345" v-model="vehicle.id">
-                      </div>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+
+                                <label class="label">Long Model</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.model_long" disabled>
+                                </div>
+
+                                <label class="label">Trim</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.trim" disabled>
+                                </div>
+
+                                <label class="label">Year Introduced</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.year_intro" disabled>
+                                </div>
+
+                                <label class="label">Derivative</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.derivative" disabled>
+                                </div>
+                                
+                            </div>
+
+                        </div>
+                        <div class="column">
+                            <div class="field">
+                                <label class="label">Short Model</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.model_short" disabled>
+                                </div>
+
+                                <label class="label">Make</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.make" disabled>
+                                </div>
+
+                                <label class="label">Year Discontinued</label>
+                                <div class="control">
+                                  <input class="input" type="text" v-model="vehicle.year_end" disabled>
+                                </div>
+                                
+                                <label class="label">Vehicle ID</label>
+                                <div class="control">
+                                  <input class="input" type="number" placeholder="12345" v-model="vehicle.id">
+                                </div>
+                            </div>
+                        </div>
                     </div>
-                    <div class="buttons">
-                        <button class="button" @click="getVehicleInfo">Get Vehicle Info</button>
+                    <div class="columns">
+                        <div class="column">
+                            <div class="field">
+                              
+                            </div>
+                        </div>
+                        <div class="column">
+                            <div class="buttons">
+                                <button class="button" @click="getVehicleData">Get Vehicle Info</button>
+                            </div>
+                        </div>
                     </div>
+
                 </div>
 
             </div>
@@ -49,29 +104,65 @@
                     year_intro: "",
                     year_end: ""
                 },
-                image_url: "./assets/480x320.png"
+                image_url: "./assets/480x320.png",
+                get_key: 0,
+                json_data: "",
+                errors: "",
+                shown: false
             },
-            // mounted() {
-            //     axios({
-            //         method: 'get',
-            //         url: 'https://izrite.com:5555/image/71890',
-            //         responseType: 'json'
-            //     }).then(result=> {
-            //         console.log(result.data.url)
-            //         this.image_url = result.data.url
-            //     })
-                
-            // },
             methods: {
-                getVehicleInfo() {
+                getVehiclePic() {
                     axios({
                         method: 'get',
                         url: 'https://izrite.com:5555/image/' + this.vehicle.id,
                         responseType: 'json'
                     }).then(result=> {
-                        console.log(result.data.url)
+                        console.log("URL: " + result.data.url)
                         this.image_url = result.data.url
+                    }).catch(function(error) {
+                        console.log(error)
                     })
+                },
+                getVehicleInfo() {
+                    axios({
+                        method: 'get',
+                        url: 'http://localhost:8000/get_vehicle?info=' + this.vehicle.id,
+                        responseType: 'json'
+                    }).then(result=> {
+                        this.json_data = result.data
+                        console.log("result.data: " + result.data)
+                        console.log("result.data.data: " + result.data.data)
+                        this.vehicle.make = ""
+                        this.vehicle.model_short = ""
+                        this.vehicle.model_long = ""
+                        this.vehicle.trim = ""
+                        this.vehicle.derivative = ""
+                        this.vehicle.year_intro = ""
+                        this.vehicle.year_end = ""
+                        this.get_key = Object.keys(result.data.data)[0]
+                        this.vehicle.make = result.data.data[this.get_key]['Make']
+                        this.vehicle.model_short = result.data.data[this.get_key]['Short Model']
+                        this.vehicle.model_long = result.data.data[this.get_key]['Long Model']
+                        this.vehicle.trim = result.data.data[this.get_key]['Trim']
+                        this.vehicle.derivative = result.data.data[this.get_key]['Derivative']
+                        this.vehicle.year_intro = result.data.data[this.get_key]['Year introduced']
+                        this.vehicle.year_end = result.data.data[this.get_key]['Year discontinued']
+                    }).catch(function(error) {
+                        this.shown = true
+                        this.errors.push(error.response.data.errors)
+                        this.vehicle.make = ""
+                        this.vehicle.model_short = ""
+                        this.vehicle.model_long = ""
+                        this.vehicle.trim = ""
+                        this.vehicle.derivative = ""
+                        this.vehicle.year_intro = ""
+                        this.vehicle.year_end = ""
+                        console.log(errors)
+                    })
+                },
+                getVehicleData() {
+                    this.getVehicleInfo()
+                    this.getVehiclePic()
                 }
             }
         })
