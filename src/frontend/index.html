@@ -3,20 +3,43 @@
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="device-width, initial-scale=1.0">
     <title>Vehicle Finder</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.7.2/css/bulma.min.css">
+    <script src="https://unpkg.com/axios/dist/axios.min.js"></script>
     <script src="https://unpkg.com/vue"></script>
 </head>
 <body>
-    <div id="app">
-        {{text}}
-    </div>
+    <section class="section">
+        <div class="container">
+            <div id="app">
+                <figure class="image is-3by2">
+                  <img :src="image_url" />
+                </figure>
+            </div>
+        </div>
+    </section>
+
     <script>
         var app = new Vue({
-            el: '#app',
+            el: "#app",
             data: {
-                text: 'vue lorem ipsum...'
+                title: "Vehicle Finder",
+                image_url: ""
+            },
+            mounted() {
+                axios({
+                    method: 'get',
+                    url: 'https://izrite.com:5555/image/71890',
+                    responseType: 'json'
+                }).then(result=> {
+                    console.log(result.data.url)
+                    this.image_url = result.data.url
+                })
+                
             }
         })
+
     </script>
 </body>
 </html>
