@@ -12,7 +12,7 @@ needed by the server.
 
 ### Prerequisites
 
-First, install the pip requirements/virtualenvironment found in the project root folder
+First, install the pip requirements/virtualenvironment found in the project root folder. 
 
 ```
 $ pip install -r requirements.txt
@@ -20,7 +20,7 @@ $ pip install -r requirements.txt
 
 ### Sample runs
 
-First run the API
+First run the API, assumes to be run on a local server as http://localhost:8000
 
 ```
 $ hug -f src/backend.api.py
@@ -46,6 +46,7 @@ $ uwsgi --http 0.0.0.0:8000 --wsgi-file src/backend/api.py --callable __hug_wsgi
 * [VueJS](https://vuejs.org/)
 * [Axios](https://github.com/axios/axios)
 * [hug REST](http://www.hug.rest/)
+* [Bulma CSS](https://bulma.io/)
 
 ## Authors
 
